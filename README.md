@@ -138,9 +138,83 @@ cargo install wasm-pack
 
 5. **Verify the Release**: After publishing, verify the release on npm by checking your package page.
 ---
-
 ## 📦 Usage
 
-To integrate this library into your JavaScript or TypeScript frontend, install the npm package and follow the usage instructions provided in the npm README:
+To integrate this library into your JavaScript or TypeScript frontend, install the npm package:
 
-👉 [View the npm package and integration guide](https://www.npmjs.com/package/on-call-sheduler?activeTab=readme)
+```bash
+npm install on-call-sheduler
+# or
+yarn add on-call-sheduler
+```
+
+### ✅ Example: React (Browser-only)
+
+> **Note:** This example shows how to dynamically load the WASM module **only on the client side** using a generic React hook.
+
+First, create a helper hook (e.g. `useClientOnlyModule.ts`):
+
+```ts
+import { useEffect, useState } from 'react';
+
+/**
+ * Dynamically imports a module only on the client side.
+ *
+ * @param loadFn A function returning a dynamic import
+ * @returns The loaded module or undefined if not yet loaded
+ */
+export function useClientOnlyModule<T>(loadFn: () => Promise<T>): T | undefined {
+  const [mod, setMod] = useState<T>();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      loadFn().then(setMod);
+    }
+  }, [loadFn]);
+
+  return mod;
+}
+```
+
+Then use it in your app:
+
+```tsx
+import type * as WASM from 'on-call-sheduler';
+import { useClientOnlyModule } from './useClientOnlyModule';
+
+const App = () => {
+  const wasm = useClientOnlyModule<typeof WASM>(() => import('on-call-sheduler'));
+
+  const handleClick = () => {
+    if (wasm) {
+      wasm.greet("Rusty dev's");
+    } else {
+      console.log('WASM not yet loaded!');
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleClick} disabled={!wasm}>
+        {wasm ? 'PUSH FOR WASM!' : 'Loading WASM...'}
+      </button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+---
+
+## ⚠️ Important: Non-browser environments (e.g. Node.js)
+
+This library includes WebAssembly (.wasm) files, which **do not work out of the box in Node.js or other non-browser runtimes.**
+
+If you want to use this library in Node.js, you’ll need to:
+
+* Load the `.wasm` files manually from disk (e.g. using `fs.readFile`)
+* Instantiate the WebAssembly module yourself
+* Handle differences in module resolution
+
+Integrating this package in server-side environments **requires additional setup**. Please check your bundler and runtime documentation for handling WebAssembly in Node.js.
