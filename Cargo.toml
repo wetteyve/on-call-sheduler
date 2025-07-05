@@ -1,10 +1,10 @@
 [package]
 name = "on-call-sheduler"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["wetteyve <yveswetter@gmx.ch>"]
 description = "A wasm-pack for computing fair on-call schedules"
 license = "MIT/Apache-2.0"
-repository = "https://github.com/wetteyve/on-call-sheduler"
+repository = "git+https://github.com/wetteyve/on-call-sheduler.git"
 edition = "2024"
 
 [lib]
