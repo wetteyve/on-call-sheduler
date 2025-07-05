@@ -96,6 +96,51 @@ This scheduler’s goal is to **distribute only weekends and public holidays** e
 
 ---
 
+## 📦 How to npm Release
+
+### Prerequisites
+
+Before releasing a new version of your Rust library compiled to WebAssembly, ensure you have the latest version of `wasm-pack` installed:
+
+```bash
+cargo install wasm-pack
+```
+
+### Steps to Release
+
+1. **Set Version in Cargo.toml**: Update the version number in your `Cargo.toml` file to indicate the new release.
+
+   ```toml
+   [package]
+   name = "your-package-name"
+   version = "x.y.z"  # Update this to the new version number
+   ```
+
+2. **Build and Pack the WebAssembly**:
+
+   ```bash
+   wasm-pack build --target bundler
+   ```
+
+   This command compiles your Rust code to WebAssembly and prepares it for publishing.
+
+3. **Pack**: Create a tarball with `wasm-pack pack`. This step bundles your Rust library into a format suitable for npm publishing.
+
+   ```bash
+   wasm-pack pack
+   ```
+
+4. **Publish to npm**: Use `wasm-pack publish` to publish your package to the npm registry.
+
+   ```bash
+   wasm-pack publish
+   ```
+
+5. **Verify the Release**: After publishing, verify the release on npm by checking your package page.
+---
+
 ## 📦 Usage
 
-Coming soon — integration details for JavaScript / TypeScript frontends via WebAssembly.
+To integrate this library into your JavaScript or TypeScript frontend, install the npm package and follow the usage instructions provided in the npm README:
+
+👉 [View the npm package and integration guide](https://www.npmjs.com/package/on-call-sheduler?activeTab=readme)
